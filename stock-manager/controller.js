@@ -1,27 +1,48 @@
-// Attach an event listener to the form with the ID 'productForm'.
-document.getElementById('productForm').addEventListener('submit', function(event) {
-    // Prevent the default form submission behavior which reloads the page.
+document.getElementById('productForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    // Create a product object by retrieving values from the form inputs.
     const product = {
-        id: document.getElementById('productId').value, // Get the value from the Product ID input field.
-        type: document.getElementById('productType').value, // Get the selected Product Type from the dropdown.
-        expiryDate: document.getElementById('expiryDate').value, // Get the value from the Expiry Date input field.
-        state: document.getElementById('productState').value // Get the selected Product State from the dropdown.
+        id: document.getElementById('productId').value,
+        type: document.getElementById('productType').value,
+        expiryDate: document.getElementById('expiryDate').value,
+        state: document.getElementById('productState').value,
     };
 
-    // Call the addProduct function to attempt to add the new product to the database.
-    // This function returns a result object with success status and a message.
-    const result = addProduct(product);
+    const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product),
+    });
 
-    // Update the view based on the result of the addProduct operation.
-    // Displays a success or error message.
-    updateView(result.success, result.message);
+    const result = await response.json();
+    document.getElementById('result').textContent = result.message;
 
-    // Refresh the display of products showing all products currently in the database.
-    displayProducts(getAllProducts());
-
-    // Update and display the latest statistics on the number of accepted and rejected products.
-    displayStats(getProductStats());
+    refreshData();
 });
+
+async function refreshData() {
+    const productsResponse = await fetch('/api/products');
+    const products = await productsResponse.json();
+    displayProducts(products);
+
+    const statsResponse = await fetch('/api/stats');
+    const stats = await statsResponse.json();
+    displayStats(stats);
+}
+
+function displayProducts(products) {
+    const container = document.getElementById('productsContainer');
+    container.innerHTML = products
+        .map(
+            (p) =>
+                `<div>${p.id} - ${p.type} - Expires on: ${p.expiryDate} - State: ${p.state}</div>`
+        )
+        .join('');
+}
+
+function displayStats(stats) {
+    const container = document.getElementById('statsContainer');
+    container.innerHTML = `Accepted: ${stats.accepted}, Rejected: ${stats.rejected}`;
+}
+
+refreshData();

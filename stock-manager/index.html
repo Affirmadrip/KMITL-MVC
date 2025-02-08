@@ -2,23 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Ensure proper scaling on different devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Management System</title>
-    <!-- Link to external CSS for styling -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Main title of the application -->
     <h1>Stock Management System</h1>
-
-    <!-- Form for adding a new product -->
     <form id="productForm">
-        <!-- Input field for Product ID with a label for accessibility -->
         <label for="productId">Product ID (6 digits):</label>
         <input type="text" id="productId" placeholder="123456" required>
-
-        <!-- Dropdown to select Product Type with a label -->
         <label for="productType">Product Type:</label>
         <select id="productType" required>
             <option value="">Select Type</option>
@@ -26,12 +18,8 @@
             <option value="Electronics">Electronics</option>
             <option value="Clothing">Clothing</option>
         </select>
-
-        <!-- Input for selecting the expiry date with a label, only applicable to food products -->
         <label for="expiryDate">Expiry Date:</label>
         <input type="date" id="expiryDate">
-
-        <!-- Dropdown to select the state of the product with a label -->
         <label for="productState">Product State:</label>
         <select id="productState" required>
             <option value="">Select State</option>
@@ -39,23 +27,11 @@
             <option value="Damaged">Damaged</option>
             <option value="Check">Needed to be checked</option>
         </select>
-
-        <!-- Submit button for the form -->
         <button type="submit">Add Product</button>
     </form>
-
-    <!-- Container to display the result message after form submission -->
     <div id="result"></div>
-
-    <!-- Container to display the list of products -->
     <div id="productsContainer"></div>
-
-    <!-- Container to display statistics about product entries -->
     <div id="statsContainer"></div>
-
-    <!-- Script links to separate JavaScript files that handle the model, view, and controller aspects -->
-    <script src="model.js"></script>
-    <script src="view.js"></script>
-    <script src="controller.js"></script>
+    <script src="./controller.js"></script>
 </body>
 </html>

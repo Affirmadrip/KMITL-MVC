@@ -1,16 +1,39 @@
-// app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const { addProduct, getAllProducts, getProductStats } = require('./backend/model');
 
-// Importing MVC components
-import { addProduct, getProductStats, getAllProducts } from './model.js';
-import { updateView, displayProducts, displayStats } from './view.js';
-import { setupEventListeners } from './controller.js';
+const app = express();
+const PORT = 8080;
 
-// Initialization function to set up the application
-function initializeApp() {
-    setupEventListeners();  // Set up the UI event listeners from the controller
-    displayProducts(getAllProducts());  // Initially display all products
-    displayStats(getProductStats());  // Display current statistics
-}
+// Middleware for parsing JSON requests
+app.use(bodyParser.json());
 
-// Call initialize function to start the app
-initializeApp();
+// Serve static files (e.g., CSS, JS) from the current directory
+app.use(express.static('.'));
+
+// Serve the index.html file for the root route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// API route for adding a product
+app.post('/api/products', (req, res) => {
+    const result = addProduct(req.body);
+    res.json(result);
+});
+
+// API route for getting all products
+app.get('/api/products', (req, res) => {
+    res.json(getAllProducts());
+});
+
+// API route for getting product statistics
+app.get('/api/stats', (req, res) => {
+    res.json(getProductStats());
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
